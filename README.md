@@ -1,12 +1,12 @@
 # Meatgrade
 
-A phone app for sorting a carcass on the floor. The camera suggests marbling from the ribeye photo. The grader confirms the degree, and the chart stamps the call.
+A phone app for the meat case. Point it at a steak and it tells you whether the steak is any good.
 
-Beef quality uses the minimum marbling in the [USDA carcass beef standard](https://www.ams.usda.gov/grades-standards/carcass-beef-grades-and-standards) for each whole maturity group. Yield grade uses the official formula and drops the fraction, so 2.75 is yield grade 2. Pork and lamb get a plant sort, not a USDA grade. A USDA grader still assigns the official grade.
+Meatgrade reads the white flecks inside the red (marbling) and the color of the lean, then gives a plain verdict: excellent, very good, good, lean, or very lean. It names the USDA grade the marbling most looks like (Prime, upper Choice, Choice, Select) and says how to cook it. Pick the cut and it adjusts the advice, since a lean tenderloin is normal while a lean ribeye is not. Enter the price on the tag, scan a few steaks, and Compare ranks them and picks the best value.
 
-The photo stays on the phone. Salesforce stores the grade and the measurements.
+The estimate comes from the camera. Lighting and plastic wrap change the number. The USDA shield on the package is the official grade.
 
-## Phone app
+## Run it
 
 Expo, React Native, iOS and Android.
 
@@ -16,12 +16,6 @@ npm test
 npx expo start
 ```
 
-Scan the QR code with Expo Go, or press `i` or `a` for a simulator. `npx expo start --web` runs it in a browser. The camera and library picker, image resize, and `jpeg-js` decode run on the device, and the grading chart in `shared/grading.js` reads the pixels.
+Scan the QR code with Expo Go, or press `i` or `a` for a simulator. `npx expo start --web` runs it in a browser. The camera, library picker, image resize, and JPEG decode run on the phone; `shared/steak.js` reads the pixels and writes the verdict. Scans stay on the phone.
 
-Build installable apps with `npx eas-cli build`. Bundle ids are set in `app.json`.
-
-## Salesforce package
-
-`force-app` is a second-generation package. `Grading_Session__c` holds the session. `GradingSessionTrigger` stamps the grade on every save and overwrites a grade typed in by a client. `Meat_Grader` is the permission set for the floor. The `meatGradeCapture` Lightning component carries the same chart for the Salesforce mobile app.
-
-Deploy with the Salesforce CLI into a scratch org or sandbox, assign Meat Grader, and run the Apex tests.
+Build installable apps with `npx eas-cli build`. Bundle ids are in `app.json`.

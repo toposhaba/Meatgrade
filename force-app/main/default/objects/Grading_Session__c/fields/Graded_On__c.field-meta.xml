@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Graded_On__c</fullName>
-    <label>Graded On</label>
-    <description>When the chart last stamped this session.</description>
-    <inlineHelpText>Updated on each save.</inlineHelpText>
-    <required>false</required>
-    <type>DateTime</type>
-</CustomField>

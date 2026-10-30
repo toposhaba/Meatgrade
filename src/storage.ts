@@ -1,21 +1,28 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import type { SavedSession } from "./draft";
+import type { Scan } from "./scan";
 
-const KEY = "meatgrade.sessions.v2";
+const KEY = "meatgrade.scans.v3";
+const MAX_SCANS = 30;
 
-export async function loadSessions(): Promise<SavedSession[]> {
+export async function loadScans(): Promise<Scan[]> {
   try {
     const raw = await AsyncStorage.getItem(KEY);
-    if (!raw) {
-      return [];
-    }
+    if (!raw) return [];
     const parsed = JSON.parse(raw) as unknown;
-    return Array.isArray(parsed) ? (parsed as SavedSession[]) : [];
+    return Array.isArray(parsed) ? (parsed as Scan[]) : [];
   } catch {
     return [];
   }
 }
 
-export async function saveSessions(sessions: SavedSession[]) {
-  await AsyncStorage.setItem(KEY, JSON.stringify(sessions));
+export async function saveScans(scans: Scan[]) {
+  const trimmed = scans.slice(0, MAX_SCANS);
+  try {
+    await AsyncStorage.setItem(KEY, JSON.stringify(trimmed));
+  } catch {
+    await AsyncStorage.setItem(
+      KEY,
+      JSON.stringify(trimmed.map((scan) => ({ ...scan, photoUri: "" }))),
+    );
+  }
 }

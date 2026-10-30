@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Photo_Captured__c</fullName>
-    <label>Photo Captured</label>
-    <description>A photo was read on the device that saved this session.</description>
-    <inlineHelpText>The photo itself stays on that device.</inlineHelpText>
-    <defaultValue>false</defaultValue>
-    <type>Checkbox</type>
-</CustomField>

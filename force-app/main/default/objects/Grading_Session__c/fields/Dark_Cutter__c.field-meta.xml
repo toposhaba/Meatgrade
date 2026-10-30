@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Dark_Cutter__c</fullName>
-    <label>Dark Cutter</label>
-    <description>Grader marked the lean as a dark cutter.</description>
-    <inlineHelpText>Prime, Choice, and Select drop one full grade.</inlineHelpText>
-    <defaultValue>false</defaultValue>
-    <type>Checkbox</type>
-</CustomField>

@@ -2,7 +2,7 @@ import { fromByteArray, toByteArray } from "base64-js";
 import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 import * as ImagePicker from "expo-image-picker";
 import { decode, encode } from "jpeg-js";
-import { analyzeRgba, buildSampleCut, type Analysis } from "../shared/grading.js";
+import { analyzeRgba, buildSampleSteak, type Analysis } from "../shared/steak.js";
 
 export type CapturedPhoto = {
   uri: string;
@@ -15,7 +15,7 @@ export async function capturePhoto(source: "camera" | "library"): Promise<Captur
   if (source === "camera") {
     const permission = await ImagePicker.requestCameraPermissionsAsync();
     if (!permission.granted) {
-      throw new Error("Allow camera access to photograph the ribeye.");
+      throw new Error("Allow camera access to photograph the steak.");
     }
   }
   const options: ImagePicker.ImagePickerOptions = {
@@ -48,19 +48,22 @@ export async function capturePhoto(source: "camera" | "library"): Promise<Captur
   const rendered = await context.renderAsync();
   const saved = await rendered.saveAsync({
     base64: true,
-    compress: 0.85,
+    compress: 0.8,
     format: SaveFormat.JPEG,
   });
   if (!saved.base64) {
     throw new Error("The photo could not be read.");
   }
   const decoded = decode(toByteArray(saved.base64), { useTArray: true, formatAsRGBA: true });
-  return { uri: saved.uri, analysis: analyzeRgba(decoded.data) };
+  return {
+    uri: `data:image/jpeg;base64,${saved.base64}`,
+    analysis: analyzeRgba(decoded.data),
+  };
 }
 
-export function sampleCut(fatRatio = 0.055): CapturedPhoto {
-  const sample = buildSampleCut(fatRatio);
-  const jpeg = encode({ data: sample.data, width: sample.width, height: sample.height }, 88);
+export function sampleSteak(fatRatio: number, seed: number): CapturedPhoto {
+  const sample = buildSampleSteak(fatRatio, seed);
+  const jpeg = encode({ data: sample.data, width: sample.width, height: sample.height }, 86);
   return {
     uri: `data:image/jpeg;base64,${fromByteArray(jpeg.data)}`,
     analysis: analyzeRgba(sample.data),
