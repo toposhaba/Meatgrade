@@ -1,10 +1,13 @@
 **/node_modules/**
 **/dist/**
-**/.vite/**
+**/.expo/**
 shared/**
 src/**
-*.html
+types/**
+assets/**
+App.tsx
+index.ts
 *.json
 !sfdx-project.json
-vite.config.ts
+vitest.config.ts
 tsconfig.json

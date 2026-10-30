@@ -341,34 +341,72 @@ function clamp(value, min, max) {
 }
 
 export function buildSampleCut(fatRatio = 0.055) {
-  const width = 160;
-  const height = 120;
+  const width = 360;
+  const height = 270;
   const data = new Uint8ClampedArray(width * height * 4);
   const ratio = Math.min(0.7, Math.max(0, fatRatio));
+  const centerX = width / 2;
+  const centerY = height / 2;
+  const radiusX = width * 0.44;
+  const radiusY = height * 0.42;
+  const lean = new Uint8Array(width * height);
+  let leanCount = 0;
+  let seed = 7;
+  const random = () => {
+    seed = (seed * 1103515245 + 12345) % 2147483648;
+    return seed / 2147483648;
+  };
+
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
+      const dx = (x - centerX) / radiusX;
+      const dy = (y - centerY) / radiusY;
+      const wobble = 1 + 0.04 * Math.sin(x / 23) + 0.03 * Math.cos(y / 17);
+      const inside = dx * dx + dy * dy < wobble;
       const offset = (y * width + x) * 4;
-      const border = x < 8 || y < 8 || x >= width - 8 || y >= height - 8;
-      let r = 12;
-      let g = 10;
-      let b = 9;
-      if (!border) {
-        const index = (y - 8) * (width - 16) + (x - 8);
-        const fat = (index * 17) % 1000 < Math.round(ratio * 1000);
-        if (fat) {
-          r = 230;
-          g = 220;
-          b = 200;
-        } else {
-          r = 140;
-          g = 42;
-          b = 38;
-        }
+      if (inside) {
+        lean[y * width + x] = 1;
+        leanCount += 1;
+        const shade = Math.round(random() * 14) - 7 + Math.round(dy * 8);
+        data[offset] = 148 + shade;
+        data[offset + 1] = 46 + shade;
+        data[offset + 2] = 42 + shade;
+      } else {
+        data[offset] = 22;
+        data[offset + 1] = 20;
+        data[offset + 2] = 19;
       }
-      data[offset] = r;
-      data[offset + 1] = g;
-      data[offset + 2] = b;
       data[offset + 3] = 255;
+    }
+  }
+
+  const target = Math.round((ratio / (1 - ratio)) * leanCount);
+  let fat = 0;
+  let guard = 0;
+  while (fat < target && guard < 20000) {
+    guard += 1;
+    const cx = Math.floor(random() * width);
+    const cy = Math.floor(random() * height);
+    if (!lean[cy * width + cx]) {
+      continue;
+    }
+    const rx = 1 + random() * 3.2;
+    const ry = 0.8 + random() * 1.6;
+    for (let y = Math.floor(cy - ry); y <= Math.ceil(cy + ry); y += 1) {
+      for (let x = Math.floor(cx - rx); x <= Math.ceil(cx + rx); x += 1) {
+        if (x < 0 || y < 0 || x >= width || y >= height) continue;
+        const index = y * width + x;
+        if (lean[index] !== 1) continue;
+        const ex = (x - cx) / rx;
+        const ey = (y - cy) / ry;
+        if (ex * ex + ey * ey > 1) continue;
+        lean[index] = 2;
+        fat += 1;
+        const offset = index * 4;
+        data[offset] = 236;
+        data[offset + 1] = 226;
+        data[offset + 2] = 208;
+      }
     }
   }
   return { data, width, height };

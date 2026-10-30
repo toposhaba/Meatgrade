@@ -1,58 +1,68 @@
+import { fromByteArray, toByteArray } from "base64-js";
+import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
+import * as ImagePicker from "expo-image-picker";
+import { decode, encode } from "jpeg-js";
 import { analyzeRgba, buildSampleCut, type Analysis } from "../shared/grading.js";
 
 export type CapturedPhoto = {
+  uri: string;
   analysis: Analysis;
-  dataUrl: string;
 };
 
-export function captureSample(fatRatio = 0.055): CapturedPhoto {
-  const sample = buildSampleCut(fatRatio);
-  const canvas = document.createElement("canvas");
-  canvas.width = sample.width;
-  canvas.height = sample.height;
-  const context = canvas.getContext("2d");
-  if (!context) {
-    throw new Error("This browser could not build the sample cut.");
+const MAX_EDGE = 480;
+
+export async function capturePhoto(source: "camera" | "library"): Promise<CapturedPhoto | null> {
+  if (source === "camera") {
+    const permission = await ImagePicker.requestCameraPermissionsAsync();
+    if (!permission.granted) {
+      throw new Error("Allow camera access to photograph the ribeye.");
+    }
   }
-  const image = context.createImageData(sample.width, sample.height);
-  image.data.set(sample.data);
-  context.putImageData(image, 0, 0);
-  return {
-    analysis: analyzeRgba(sample.data),
-    dataUrl: canvas.toDataURL("image/jpeg", 0.72),
+  const options: ImagePicker.ImagePickerOptions = {
+    mediaTypes: ["images"],
+    quality: 0.9,
+    exif: false,
   };
+  const result =
+    source === "camera"
+      ? await ImagePicker.launchCameraAsync(options)
+      : await ImagePicker.launchImageLibraryAsync(options);
+  if (result.canceled || result.assets.length === 0) {
+    return null;
+  }
+  const asset = result.assets[0];
+  const width = asset.width || MAX_EDGE;
+  const height = asset.height || MAX_EDGE;
+  const context = ImageManipulator.manipulate(asset.uri, {
+    maxWidth: MAX_EDGE * 2,
+    maxHeight: MAX_EDGE * 2,
+  });
+  const longest = Math.max(width, height);
+  if (longest > MAX_EDGE) {
+    const scale = MAX_EDGE / longest;
+    context.resize({
+      width: Math.max(1, Math.round(width * scale)),
+      height: Math.max(1, Math.round(height * scale)),
+    });
+  }
+  const rendered = await context.renderAsync();
+  const saved = await rendered.saveAsync({
+    base64: true,
+    compress: 0.85,
+    format: SaveFormat.JPEG,
+  });
+  if (!saved.base64) {
+    throw new Error("The photo could not be read.");
+  }
+  const decoded = decode(toByteArray(saved.base64), { useTArray: true, formatAsRGBA: true });
+  return { uri: saved.uri, analysis: analyzeRgba(decoded.data) };
 }
 
-export function captureFile(file: File): Promise<CapturedPhoto> {
-  return new Promise((resolve, reject) => {
-    const url = URL.createObjectURL(file);
-    const image = new Image();
-    image.onload = () => {
-      const maxEdge = 480;
-      const scale = Math.min(1, maxEdge / Math.max(image.width, image.height));
-      const width = Math.max(1, Math.round(image.width * scale));
-      const height = Math.max(1, Math.round(image.height * scale));
-      const canvas = document.createElement("canvas");
-      canvas.width = width;
-      canvas.height = height;
-      const context = canvas.getContext("2d", { willReadFrequently: true });
-      if (!context) {
-        URL.revokeObjectURL(url);
-        reject(new Error("This browser could not read the photo."));
-        return;
-      }
-      context.drawImage(image, 0, 0, width, height);
-      const pixels = context.getImageData(0, 0, width, height).data;
-      URL.revokeObjectURL(url);
-      resolve({
-        analysis: analyzeRgba(pixels),
-        dataUrl: canvas.toDataURL("image/jpeg", 0.72),
-      });
-    };
-    image.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error("That photo could not be opened."));
-    };
-    image.src = url;
-  });
+export function sampleCut(fatRatio = 0.055): CapturedPhoto {
+  const sample = buildSampleCut(fatRatio);
+  const jpeg = encode({ data: sample.data, width: sample.width, height: sample.height }, 88);
+  return {
+    uri: `data:image/jpeg;base64,${fromByteArray(jpeg.data)}`,
+    analysis: analyzeRgba(sample.data),
+  };
 }

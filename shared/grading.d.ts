@@ -40,7 +40,7 @@ export type GradeDecision = {
 };
 
 export function classifyPixel(r: number, g: number, b: number): PixelKind;
-export function analyzeRgba(data: Uint8ClampedArray): Analysis;
+export function analyzeRgba(data: Uint8ClampedArray | Uint8Array): Analysis;
 export function suggestDegree(marblingPercent: number | null): string | null;
 export function suggestPorkColor(meanLeanLuma: number | null): number | null;
 export function suggestPorkMarbling(marblingPercent: number | null): number | null;

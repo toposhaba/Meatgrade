@@ -1,23 +1,27 @@
 # Meatgrade
 
-Floor tool for sorting a carcass. The camera suggests marbling from the photo. The grader confirms the degree, and the chart stamps the call.
+A phone app for sorting a carcass on the floor. The camera suggests marbling from the ribeye photo. The grader confirms the degree, and the chart stamps the call.
 
 Beef quality uses the minimum marbling in the [USDA carcass beef standard](https://www.ams.usda.gov/grades-standards/carcass-beef-grades-and-standards) for each whole maturity group. Yield grade uses the official formula and drops the fraction, so 2.75 is yield grade 2. Pork and lamb get a plant sort, not a USDA grade. A USDA grader still assigns the official grade.
 
-The photo stays on the device. Salesforce stores the grade and the measurements.
+The photo stays on the phone. Salesforce stores the grade and the measurements.
 
-## Floor app
+## Phone app
+
+Expo, React Native, iOS and Android.
 
 ```bash
 npm install
 npm test
-npm run dev
+npx expo start
 ```
 
-Open the local site, load the sample cut or take a ribeye photo, confirm the degree, and save. Saved grades stay in this browser.
+Scan the QR code with Expo Go, or press `i` or `a` for a simulator. `npx expo start --web` runs it in a browser. The camera and library picker, image resize, and `jpeg-js` decode run on the device, and the grading chart in `shared/grading.js` reads the pixels.
+
+Build installable apps with `npx eas-cli build`. Bundle ids are set in `app.json`.
 
 ## Salesforce package
 
-`force-app` is a second-generation package. `Grading_Session__c` holds the session. `GradingSessionTrigger` stamps the grade on every save and overwrites a grade typed in by a client. `Meat_Grader` is the permission set for the floor. Put the Meatgrade capture component on a phone app page.
+`force-app` is a second-generation package. `Grading_Session__c` holds the session. `GradingSessionTrigger` stamps the grade on every save and overwrites a grade typed in by a client. `Meat_Grader` is the permission set for the floor. The `meatGradeCapture` Lightning component carries the same chart for the Salesforce mobile app.
 
 Deploy with the Salesforce CLI into a scratch org or sandbox, assign Meat Grader, and run the Apex tests.
