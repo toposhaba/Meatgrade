@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Lean_Pixel_Percent__c</fullName>
+    <label>Lean Pixel Percent</label>
+    <description>Share of the photo classified as lean.</description>
+    <inlineHelpText>Used to judge whether the frame had enough meat.</inlineHelpText>
+    <precision>5</precision>
+    <scale>2</scale>
+    <required>false</required>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Hot_Carcass_Weight_Lb__c</fullName>
+    <label>Hot Carcass Weight (lb)</label>
+    <description>Hot carcass weight in pounds.</description>
+    <inlineHelpText>Chilled weight can be converted at 102 percent.</inlineHelpText>
+    <precision>7</precision>
+    <scale>1</scale>
+    <required>false</required>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Marbling_Degree__c</fullName>
+    <label>Marbling Degree</label>
+    <description>Degree the grader confirmed.</description>
+    <inlineHelpText>The camera can suggest this. The confirmed degree is what the chart uses.</inlineHelpText>
+    <required>false</required>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Practically Devoid</fullName>
+                <default>false</default>
+                <label>Practically Devoid</label>
+            </value>
+            <value>
+                <fullName>Traces</fullName>
+                <default>false</default>
+                <label>Traces</label>
+            </value>
+            <value>
+                <fullName>Slight</fullName>
+                <default>false</default>
+                <label>Slight</label>
+            </value>
+            <value>
+                <fullName>Small</fullName>
+                <default>false</default>
+                <label>Small</label>
+            </value>
+            <value>
+                <fullName>Modest</fullName>
+                <default>false</default>
+                <label>Modest</label>
+            </value>
+            <value>
+                <fullName>Moderate</fullName>
+                <default>false</default>
+                <label>Moderate</label>
+            </value>
+            <value>
+                <fullName>Slightly Abundant</fullName>
+                <default>false</default>
+                <label>Slightly Abundant</label>
+            </value>
+            <value>
+                <fullName>Moderately Abundant</fullName>
+                <default>false</default>
+                <label>Moderately Abundant</label>
+            </value>
+            <value>
+                <fullName>Abundant</fullName>
+                <default>false</default>
+                <label>Abundant</label>
+            </value>
+            <value>
+                <fullName>Very Abundant</fullName>
+                <default>false</default>
+                <label>Very Abundant</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

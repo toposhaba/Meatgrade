@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Yield_Grade_Score__c</fullName>
+    <label>Yield Grade Score</label>
+    <description>Calculated yield score before the fraction is dropped.</description>
+    <inlineHelpText>Shown so a grader can check the formula.</inlineHelpText>
+    <precision>5</precision>
+    <scale>2</scale>
+    <required>false</required>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

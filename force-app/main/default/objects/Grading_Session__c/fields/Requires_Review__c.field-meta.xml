@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Requires_Review__c</fullName>
+    <label>Requires Review</label>
+    <description>The chart wants a grader to finish the call.</description>
+    <inlineHelpText>Read the review reason before the grade is treated as final.</inlineHelpText>
+    <defaultValue>false</defaultValue>
+    <type>Checkbox</type>
+</CustomField>

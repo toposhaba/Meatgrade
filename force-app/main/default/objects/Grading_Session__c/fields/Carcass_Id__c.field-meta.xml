@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Carcass_Id__c</fullName>
+    <label>Carcass ID</label>
+    <description>Plant carcass or lot identifier.</description>
+    <inlineHelpText>One grade record per carcass ID.</inlineHelpText>
+    <length>40</length>
+    <required>true</required>
+    <type>Text</type>
+    <unique>true</unique>
+    <externalId>true</externalId>
+</CustomField>

@@ -1,0 +1,10 @@
+**/node_modules/**
+**/dist/**
+**/.vite/**
+shared/**
+src/**
+*.html
+*.json
+!sfdx-project.json
+vite.config.ts
+tsconfig.json
