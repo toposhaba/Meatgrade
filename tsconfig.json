@@ -1,0 +1,10 @@
+{
+  "extends": "expo/tsconfig.base",
+  "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["App.tsx", "index.ts", "src", "shared", "types", "vitest.config.ts"],
+  "exclude": ["node_modules", "force-app", "dist", ".expo"]
+}
